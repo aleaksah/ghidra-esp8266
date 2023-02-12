@@ -18,6 +18,7 @@ package ghidraesp8266_2;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.io.ByteArrayInputStream;
 
 import ghidra.app.util.MemoryBlockUtils;
 import ghidra.app.util.Option;
@@ -118,9 +119,10 @@ public class GhidraESP8266_2Loader extends AbstractLibrarySupportLoader {
 		for (ESP8266Section section: module.getSections()) {
 			Address start = program.getAddressFactory().getDefaultAddressSpace().getAddress(section.getOffset());
 			Msg.info(this, String.format("Section at offset %08x, size %d", start.getOffset(), section.getSize()));
+			InputStream streamContent = new ByteArrayInputStream(section.getContent());
 			MemoryBlockUtils.createInitializedBlock(program, false,
-				section.getName(), start, reader, section.getSize(), "", BLOCK_SOURCE_NAME, r, w, x, log, monitor);
-			createData(program, program.getListing(), start, section.toDataType());			
+				section.getName(), start, streamContent, section.getSize(), "", BLOCK_SOURCE_NAME, r, w, x, log, monitor);
+			//createData(program, program.getListing(), start, section.toDataType());			
 			// Mark code sections
 			if(section.getType() == ESP8266Constants.SECTION_TYPE_CODE)
 			{

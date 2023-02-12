@@ -22,7 +22,7 @@ public class ESP8266Header implements StructConverter {
 		magic = reader.readNextByte();
 		Msg.info(this, String.format("Magic = %02x", magic));
 		if (ESP8266Constants.ESP_MAGIC_BASE != getMagic()) {
-			throw new IOException("not an ESP8266 file.");
+			throw new IOException("not an ESP8266 v1 file. newer formats aren't supported.");
 		}
 		segments = reader.readNextByte();
 		Msg.info(this, String.format("Segments = %d", segments));
